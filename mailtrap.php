@@ -7,12 +7,12 @@ $mail = new PHPMailer;
 $mail->SMTPDebug = 3;                               // Enable verbose debug output
 
 $mail->isSMTP();                                      // Set mailer to use SMTP
-$mail->Host       = 'smtp.mailtrap.io';  // Specify main and backup SMTP servers
+$mail->Host       = 'in-v3.mailjet.com';  // Specify main and backup SMTP servers
 $mail->SMTPAuth   = true;                               // Enable SMTP authentication
-$mail->Username   = 'c19279fa3354b9';                 // SMTP username
-$mail->Password   = '6cfb6723da5901';                           // SMTP password
+$mail->Username   = '47a214fbd2208fa6bb657e820e8314b5';                 // SMTP username
+$mail->Password   = '2d662c45a6a591d4abf7916adf91b395';                           // SMTP password
 $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-$mail->Port       = 25;                                    // TCP port to connect to
+$mail->Port       = 587;                                    // TCP port to connect to
 
 $mail->setFrom('from@example.com', 'Mailer');
 $mail->addAddress('joe@example.net', 'Joe User');     // Add a recipient

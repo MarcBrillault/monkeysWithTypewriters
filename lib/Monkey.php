@@ -84,7 +84,9 @@ class Monkey
      */
     private function _checkGoogleBooks()
     {
-        $return = [];
+        $return = [
+            'text' => $this->text,
+        ];
         $client = new Google_Client();
         $client->setApplicationName(getenv('GOOGLE_BOOKS_PROJECT_NAME'));
         $client->setDeveloperKey(getenv('GOOGLE_BOOKS_API_KEY'));
@@ -97,9 +99,8 @@ class Monkey
         $results = $batch->execute();
 
         foreach ($results['response-test'] as $book) {
-            // \Brio\dd($book);
 
-            $return[] = [
+            $return['books'][] = [
                 'id'      => $book['id'],
                 'title'   => $book['volumeInfo']['title'],
                 'authors' => $book['volumeInfo']['authors'],
@@ -116,12 +117,12 @@ class Monkey
      */
     public function useTypeWriter()
     {
-        $this->makeFakeText();
+        $this->makeFakeText(getenv('TEXT_LENGTH'));
         $books = $this->_checkGoogleBooks();
-        if (!empty($books)) {
-            $this->_sendMail('A monkey has typed something !', $this->_getEmailContent($books));
+        // \Brio\dd($books);
+        if (!empty($books['books'])) {
+            $this->_sendMail('A monkey has typed something !', $this->_getEmailContent($books['books']));
         }
-        \Brio\dd($books);
     }
 
     /**
@@ -133,7 +134,7 @@ class Monkey
     {
         $mail = new PHPMailer();
         $mail->isSMTP();
-        $mail->SMTPDebug  = 4;
+        // $mail->SMTPDebug  = 4;
         $mail->Host       = getenv('SMTP_HOST');
         $mail->SMTPAuth   = true;
         $mail->Username   = getenv('SMTP_USERNAME');
@@ -141,7 +142,7 @@ class Monkey
         $mail->SMTPSecure = 'tls';
         $mail->Port       = getenv('SMTP_PORT');
         $mail->setFrom(getenv('SMTP_FROM_EMAIL'), getenv('SMTP_FROM_NAME'));
-        $mail->addAddress(getenv('SMTP_TO_EMAIL'), getenv('SMTP_TO_NAME'));     // Add a recipient
+        $mail->addAddress(getenv('SMTP_TO_EMAIL'), getenv('SMTP_TO_NAME'));
 
         $mail->isHTML(true);
 
@@ -149,7 +150,6 @@ class Monkey
         $mail->Body    = $content;
 
         if (!$mail->send()) {
-            \Brio\dd($mail->ErrorInfo);
 
             return false;
         }
@@ -158,12 +158,33 @@ class Monkey
     }
 
     /**
-     * @param array $data
+     * @param array $books
      * @return string
      */
-    private function _getEmailContent(array $data)
+    private function _getEmailContent(array $books)
     {
-        return 'Nope, sorry';
+        $return = '';
+        $html   = <<<HTML
+<h1>%s</h1>
+Par %s<br>
+<img src="%s"><br>
+<a href="%s">Texte complet</a>
+HTML;
+        foreach ($books as $book) {
+            $authors = '';
+            if (!empty($book['authors'])) {
+                $authors = implode(', ', $book['authors']);
+            }
+            $return .= sprintf(
+                $html,
+                $book['title'],
+                $authors,
+                $book['image'],
+                $book['link']
+            );
+        }
+
+        return $return;
     }
 }
 
