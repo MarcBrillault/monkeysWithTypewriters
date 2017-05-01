@@ -28,7 +28,10 @@ class Monkey
 
     const GOOGLE_LINK = 'https://books.google.fr/books?hl=fr&id=%1$s&q=%2$s#v=snippet&q=%2$s&f=false';
 
-    public function makeFakeText(int $length = 100): void
+    /**
+     * @param int $length
+     */
+    public function makeFakeText($length = 100)
     {
         if (!empty($this->text)) {
             return;
@@ -52,22 +55,34 @@ class Monkey
         $this->text = $text;
     }
 
-    public function setDev(bool $dev): void
+    /**
+     * @param bool $dev
+     */
+    public function setDev($dev)
     {
         $this->_dev = $dev;
     }
 
-    public function getText(): string
+    /**
+     * @return string
+     */
+    public function getText()
     {
         return $this->text;
     }
 
-    public function getCharacterSet(): array
+    /**
+     * @return array
+     */
+    public function getCharacterSet()
     {
         return str_split($this->_characterSet);
     }
 
-    private function _checkGoogleBooks(): array
+    /**
+     * @return array
+     */
+    private function _checkGoogleBooks()
     {
         $return = [];
         $client = new Google_Client();
@@ -96,7 +111,10 @@ class Monkey
         return $return;
     }
 
-    public function useTypeWriter(): void
+    /**
+     *
+     */
+    public function useTypeWriter()
     {
         $this->makeFakeText();
         $books = $this->_checkGoogleBooks();
@@ -106,7 +124,12 @@ class Monkey
         \Brio\dd($books);
     }
 
-    private function _sendMail(string $subject, string $content): bool
+    /**
+     * @param string $subject
+     * @param string $content
+     * @return bool
+     */
+    private function _sendMail($subject, $content)
     {
         $mail = new PHPMailer();
         $mail->isSMTP();
@@ -134,7 +157,11 @@ class Monkey
         return true;
     }
 
-    private function _getEmailContent(array $data): string
+    /**
+     * @param array $data
+     * @return string
+     */
+    private function _getEmailContent(array $data)
     {
         return 'Nope, sorry';
     }
