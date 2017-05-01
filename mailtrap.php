@@ -4,7 +4,7 @@ require_once __DIR__ . '/lib/loader.php';
 
 $mail = new PHPMailer;
 
-//$mail->SMTPDebug = 3;                               // Enable verbose debug output
+$mail->SMTPDebug = 3;                               // Enable verbose debug output
 
 $mail->isSMTP();                                      // Set mailer to use SMTP
 $mail->Host       = 'smtp.mailtrap.io';  // Specify main and backup SMTP servers
