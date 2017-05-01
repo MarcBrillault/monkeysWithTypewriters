@@ -9,8 +9,9 @@ $dotEnv->required('GOOGLE_BOOKS_API_KEY')->notEmpty();
 
 /**
  * @param string $className
+ * @return bool
  */
-function autoLoad(string $className): bool
+function autoLoad($className)
 {
     $file = sprintf('%s/%s.php', __DIR__, $className);
     if (file_exists($file)) {
