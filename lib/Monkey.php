@@ -121,7 +121,7 @@ class Monkey
         $books = $this->_checkGoogleBooks();
         // \Brio\dd($books);
         if (!empty($books['books'])) {
-            $this->_sendMail('A monkey has typed something !', $this->_getEmailContent($books['books']));
+            $this->_sendMail('A monkey has typed something !', $this->_getEmailContent($books['text'], $books['books']));
         }
     }
 
@@ -158,12 +158,13 @@ class Monkey
     }
 
     /**
-     * @param array $books
+     * @param string $text
+     * @param array  $books
      * @return string
      */
-    private function _getEmailContent(array $books)
+    private function _getEmailContent($text, array $books)
     {
-        $return = '';
+        $return = sprintf('Texte recherché : %s<br>', $text);
         $html   = <<<HTML
 <h1>%s</h1>
 Par %s<br>
